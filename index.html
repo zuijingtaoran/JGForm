@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8,IE=11" />
+    <title></title>
+    
+</head>
+<body>
+    
+    <div id="box"></div>
+
+
+    <script src="doc/script/jquery-1.11.3.js"></script>
+    <script src="doc/script/JGForm.js?v=143311"async></script>
+    <script>
+        window.onload = function () {
+            form1 = JGForm('#box', [
+                {
+                    'category': 'INPUT', 'desc': 'Comments', 'maxlength': 20,'title':'cdyusciudsic'
+                }
+                , { 'category': 'INPUT', 'desc': 'PN_qty', 'value': 'duhewffuiiefhw efhwiueh ewiuhfcpiuew' }
+                , { 'category': 'INPUT', 'desc': 'xxx', 'readonly': 'readonly' }
+                , { 'category': 'INPUT', 'desc': '12', 'type': 'number' }
+                , { 'category': 'SELECT', 'desc': 'CATE', 'selectType': 'radio' }
+                , { 'category': 'SELECT', 'desc': 'CATEgory', 'selectType': 'checkbox' }
+                , { 'category': 'SELECT', 'desc': 'xced', 'selectType': 'date' }
+                , { 'category': 'SELECT', 'desc': 'xced', 'selectType': 'month' }
+                , { 'category': 'ATTACHMENT', 'desc': 'attach' }
+                , {
+                    'category': 'BUTTON', 'value': 'Department', 'click': function () {
+                        //var $elem = $(this);
+                        //var fd = new FormData(document.forms.namedItem("qaz"));
+                        //$.ajax({
+
+                        //    url: 'post.ashx',
+                        //    type: 'POST',
+                        //    data: fd,
+                        //    processData: false,
+                        //    contentType: false,
+                        //    success: function (data) { }
+
+                        //})
+
+
+                    }
+                }
+                
+            ])
+        }
+    </script>
+</body>
+
+</html>

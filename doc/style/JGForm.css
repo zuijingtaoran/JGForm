@@ -1,0 +1,390 @@
+﻿.JGFormBox {position:relative;
+            width:98%; 
+            height:auto;         
+            padding:10px;
+            font-size:13px;
+            border:2px solid #eee;
+            border-radius:4px;
+}
+    .JGFormBox * {
+        box-sizing: border-box;
+        margin: 0px;
+        padding:0px; position:relative; font-family:Arial;
+    }
+    .JGFormBox .JGFormRow {
+        width: 99%;
+      
+        height: auto;
+        padding: 3px;
+        margin: 9px;
+    }
+
+
+ .JGFormBox .JGFormRow label {
+    font-size: 1.3em;
+    width: 200px;
+  
+    display: inline-block;
+   
+    float: left;
+    text-align: right;
+}
+        .JGFormBox .JGFormRow div {
+            font-size: 1.1em;
+            width: auto;
+          
+            border: 1px solid #ddd;
+            height: 30px;
+            text-align: left;
+            margin-left: 220px;
+          
+        }
+            /*.JGFormBox .JGFormRow div::before {
+                position: absolute;
+                height: 10px;
+                width: auto;
+                bottom: -11px;
+                right: 30px;
+                content: attr(type);
+                color: #fff;
+                font-size: 9px;
+                z-index: 1;
+                background-color: #ddd;
+              
+               
+            }*/
+            .JGFormBox .JGFormRow div::after {
+             
+            }
+            .JGFormBox .JGFormRow div[type=text]::after {
+                position: absolute;
+                height: 12px;
+                width: auto;
+                bottom: -13px;
+                right: -1px;
+                font-size: 10px;
+                z-index: 1;
+                background-color: #ddd;
+                text-align: center;
+                border-bottom-left-radius: 4px;
+                padding-left: 6px;
+                padding-right: 2px; content: attr(type) ' max:'attr(maxlength);
+                color: #0094ff;
+            }
+            .JGFormBox .JGFormRow div[type=number]::after {
+                position: absolute;
+                height: 12px;
+                width: auto;
+                bottom: -13px;
+                right: -1px;
+                font-size: 10px;
+                z-index: 1;
+                background-color: #ddd;
+                text-align: center;
+                border-bottom-left-radius: 4px;
+                padding-left: 6px;
+                padding-right: 2px;
+                content: attr(type);
+                color: #ff6a00;
+            }
+            /*before*/
+            .JGFormBox .JGFormRow div[type=text]::before {
+                position: absolute;
+                content: 'ABC';
+                text-shadow:1px 1px 1px #ddd;
+                bottom: 10px;
+                right: 15px;
+                z-index: 1;
+                font-family:Arial;
+                 color:#aaa;
+                  right:5px;
+                   bottom:2px; font-size:13px; font-weight:bold;
+            }
+            .JGFormBox .JGFormRow div[type=number]::before {
+                position: absolute;
+                content: '123';
+                text-shadow: 1px 1px 1px #ddd;
+                bottom: 10px;
+                right: 15px;
+                z-index: 1;
+                font-family: Arial;
+                color: #aaa;
+                right: 5px;
+                bottom: 2px;
+                font-size: 13px;
+                font-weight: bold;
+            }
+            .JGFormBox .JGFormRow div[type=select]::before {
+                position: absolute;
+                content: '';
+                bottom: 10px;
+                right: 15px;
+                z-index: 1;
+                width: 0;
+                height: 0;
+                border-top: 5px solid black;
+                border-right: 5px solid transparent;
+                border-left: 5px solid transparent;
+               
+            }
+            .JGFormBox .JGFormRow div[type=attachment] {
+                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABlklEQVRIieXVP0iVURjH8Y8W1RAElZgiCOEfCAM3wcCx0a0SoaFyC5qaRUyXEsGIoC66tLQIggSlkEEucQVdorA9aA2Xmhqec+1F3ut738tdot/yvodz+D3P+T7POYd/XW0t8DiHHvzED/xugeehbuMTttN3DSPNmrXjFs6n8T18xV2xgyE8xi4uNxNgHu9wCnewh9GcdS+xVMa4PZm/R4fAsoexOuvHsVkmwBw+oAs31c+8pgmsN2r+CFvoxGQyv5az7mTmf13s+FjVsGzhgihuHpY+UdjeNH4muqmrKEAjWPqxg0rawSK+4GqR+axiLAOoYgVnsJDMh4rMZ/ARl3BDfSxVLAuUC+I8DBeZX8c+BtPi3ZzM+zPmBP+GsMCrlI30rRyZz2I5jScaxFLTW9EtcB9v/G2/PlHQ0liy2hSnlKjBBlYxnTJ/nuZKYcnqhbhHauoWHfU6BT6hRLfkaQTfxF2Sp6eawHJUD/AZD3FFXG5jogGqmsCS96KNY0rU4QBnRYHn8L0VAYjTeVF0zC/xFP6n+gOw01gVXVLmxgAAAABJRU5ErkJggg==');
+                background-position-x: 99%;
+                background-position-y: 2px;
+                background-repeat:no-repeat;
+                height:auto;
+            }
+            /*.JGFormBox .JGFormRow div[type=attachment]::after {
+                position: absolute;
+                content: "";
+                bottom: 1px;
+                right: 17px;
+                z-index: 1;
+                width: 10px;
+                height: 17px;
+                border: 2px solid #bbb;
+                border-top: none;
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+                transform:rotate(45deg);
+            }
+
+            .JGFormBox .JGFormRow div[type=attachment]::before {
+                position: absolute;
+                content: "";
+                bottom: 10px;
+                right: 15px;
+                z-index: 1;
+                width: 6px;
+                height: 13px;
+                border: 2px solid #bbb;
+                border-bottom: none;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+                transform: rotate(45deg);
+            }*/
+
+            .JGFormBox .JGFormRow div input {
+                width: 100%;
+                height: 28px;
+                border: none;
+            }
+                .JGFormBox .JGFormRow div input[readonly] {
+                    background-color:#f5f5f5;
+                }
+                
+                /**attach*/
+            .JGFormBox .JGFormRow div[type=attachment] .addBox
+            {
+                width:50px;
+                 height:30px;
+                 overflow:hidden;
+                 display:inline-block;
+
+            }
+                .JGFormBox .JGFormRow div[type=attachment] .addBox .addLeft {
+                    width: 15px;
+                    height: 30px;
+                    float: left;
+                    vertical-align: middle;
+                    text-align: center;
+                    display: inline-block;
+                    line-height: 30px;
+                    color: #00b88c;
+                    font-weight: bold;
+                    font-size: 20px;
+                }
+
+                .JGFormBox .JGFormRow div[type=attachment] .addBox .addRight {
+                    width: 35px;
+                    height: 30px;
+                    float: left;
+                
+                    display: inline-block;
+                    font-size: 0;
+                }
+                    .JGFormBox .JGFormRow div[type=attachment] .addBox .addRight [class*=add] {
+                        width: 35px;
+                        height: 15px;
+                        border: none;
+                        color: #fff;
+                        font-size: 13px;
+                        display: inline-block;
+                        cursor:pointer; margin:0px; text-align:center;
+                    }
+                    .JGFormBox .JGFormRow div[type=attachment] .addBox .addRight .addFile {
+                        background-color: #ff6a00;
+                        display: inline-block;
+                    }
+                    .JGFormBox .JGFormRow div[type=attachment] .addBox .addRight .addLink {
+                        background-color: #4394d6;
+                        display: inline-block;
+                    }
+
+
+            .JGFormBox .JGFormRow div[type=attachment] .fileBox {
+                position: relative;
+                display: inline-block;
+                background: #ffc;
+                border-radius: 4px;
+                color: #333;
+                overflow: hidden;
+            }
+          
+            .JGFormBox .JGFormRow div[type=attachment] [addFile] {
+             
+                border: 1px dotted #ff6a00;             
+                padding: 4px 24px 4px 4px;
+                overflow: hidden;              
+                text-decoration: none;
+                text-indent: 0;
+                line-height: 20px;              
+                margin-left: 2px;
+                cursor: pointer;
+               
+            }
+            .JGFormBox .JGFormRow div[type=attachment] [addLink] {
+              
+                border: 1px dotted #4394d6;
+              
+                padding: 2px 24px 2px 4px;          
+               
+            
+            
+                margin-left: 2px;
+               
+                height: 28px;
+                min-width: 100px;
+            
+            }
+            .JGFormBox .JGFormRow div[type=attachment] .filechoose {
+                border-style: solid;
+            }
+                .JGFormBox .JGFormRow div[type=attachment] .filechoose::before {
+                    position: absolute;
+                    top: -2px;
+                    right: -10px;
+                    width: 20px;
+                    height: 10px;
+                    background-color: #00b88c;
+                    content: "";
+                    color: #fff;
+                    transform: rotate(45deg);
+                    z-index:4;
+                }
+
+            .JGFormBox .JGFormRow div[type=attachment] .fileerror {
+                border-width: 2px;
+                border-color: red;
+            }
+
+
+
+            .JGFormBox .JGFormRow div[type=attachment] [addFile] input {
+                position: absolute;
+                font-size: 100px;
+                right: 0;
+                top: 0;
+                opacity: 0;
+                z-index: 2;
+                cursor: pointer;
+            }
+            .JGFormBox .JGFormRow div[type=attachment] [addLink] input {
+                position: absolute;
+                font-size: 13px;
+                left: 0px;
+                z-index: 2;
+                border: none;
+                border-bottom: 1px solid #4394d6;
+                width: 99%;
+                height: 22px;
+                background-color: #ffc;
+                margin:0px;
+                padding:0px;
+                
+            }
+
+            .JGFormBox .JGFormRow div[type=attachment] .fileBox i {
+                position: absolute;
+                top: 3px;
+                right: 2px;
+                z-index: 3;
+                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAuUlEQVQ4je2UUQ3CMBRFDwkCJgEJk4ADcAAOCAoIClYJ4GAoIDiYhCIBBeNjt1lTunXlj4WTNH0vr+/2tmkKf2aBAdpgmFTTIlFvgSPQKC+BKtW3DHLX5LMDNooLzXev7m8aFbXAU0Jn4BExctN8Aq7qSbKmO7ZjJYeFYkertR+ETmNcgFrxdkgoVxT6u5zEVNEs5iVq6N9hM7YwR7T2YvutqHNzYNhZCbxG6lH2chV+Jm5Yujf747wBx64mzl+RJQwAAAAASUVORK5CYII=');
+                background-repeat: no-repeat;
+                display: inline-block;
+                width: 23px;
+                height: 23px;
+                cursor: pointer;
+                background-color: #ffc;
+                border-radius: 12px;
+            }
+            .JGFormBox .JGFormRow div[type=attachment] .fileBox i:hover { background-color:#ffd800; 
+            }
+            
+            .JGFormBox .JGFormBtn {
+                text-align: right;
+                font-size: 1.1em;
+                padding: 4px;
+            }
+    .JGFormBox .JGFormBtn input[type=button] {
+        width: 130px;
+        height: 30px;
+        border: none;
+        border-radius: 3px;
+        background-color: #4394d6;
+        color: #fff; margin-left:4px;
+    }
+        .JGFormBox .JGFormBtn input[type=button]:hover {
+             cursor:pointer; background-color:#0094ff;
+        }
+
+.JGFormSelectBox {
+    height: auto;
+    border: 1px solid #bbb;
+    position: absolute;
+    background-color: #fbfbfb;
+    min-width:130px;
+}
+
+    .JGFormSelectBox ul {
+        list-style-type: none;
+        list-style-position:inside;
+        padding:3px;
+        margin:2px;
+    }
+        .JGFormSelectBox ul[selectType=radio] {
+            list-style-type:circle;
+            
+        }
+        .JGFormSelectBox ul[selectType=checkbox] {
+        
+            list-style-type: square;
+        }
+        .JGFormSelectBox ul li {
+            width: 100%;
+            padding:2px;
+           
+        }
+      
+            
+            .JGFormSelectBox ul li:hover {
+                background-color: #4394d6;
+                cursor: pointer;
+                color: #fff;
+            }
+    .JGFormSelectBox .JGFormSelectBtn {
+        text-align: right;
+        padding: 3px;
+        border-top: 2px dotted #bbb;
+    }
+
+        .JGFormSelectBox .JGFormSelectBtn a { margin-left:3px; font-size:0.9em; display:inline-block; padding:2px;
+                                              color:#4394d6;
+        }
+            .JGFormSelectBox .JGFormSelectBtn a:hover { background-color:#4394d6; color:#fff;
+                                                        cursor:pointer;
+            }
+
+
+#jmonth { z-index:100;
+}
