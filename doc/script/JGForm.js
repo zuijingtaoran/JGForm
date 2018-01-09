@@ -1,4 +1,4 @@
-﻿var JGForm = function (box,obj) {
+﻿var JGForm = function (box,obj,cols) {
      /*
         depend:jquery-1.11.3.js  
         arguments&typeof:
@@ -53,10 +53,21 @@
                'fizeType': "xlsx,docx,pptx,jpg,png,gif,msg,pdf"
               
             },
+            EDITOR: {
+                'desc': 'remark',
+                'name': 'remark',
+              
+                'value': "",
+                'html':"",
+                'minlength': 1,
+                'maxlength': 10000
+              
+
+            },
             BUTTON: {
                 'type': 'button',
                 'value':'Submit',
-                'class': 'btn',
+                'skin': 'btn',
                 'click':
                 function () { }
             }
@@ -89,14 +100,31 @@
 
                 
             }
+            //,
+            //{
+            //    type: 'script',
+            //    name: 'wangEditor',
+            //    load: true,
+            //    url: 'https://unpkg.com/wangeditor/release/wangEditor.min.js'
+            //    //unpkg.com/wangeditor/release/wangEditor.min.js
+            //}
+            //,
+            //{
+            //    type: 'script',
+            //    name: 'xss',
+            //    load: true,
+            //    url: 'https://raw.github.com/leizongmin/js-xss/master/dist/xss.js'
+            //    //unpkg.com/wangeditor/release/wangEditor.min.js
+            //}
 
         ]
         this.addFile = '<a href="javascript:;"  class="fileBox" addFile><span>ChooseFile</span><input type= "file" name= "file" /><i></i> </a >';
         this.addLink = '<a  title="Input a link." class="fileBox" addLink><input type= "text" name= "addLink" /><i></i></a >';
         this.cacheObj = {};
+        this.cols = cols;
         this.init(box,obj);
     } else {
-        return new JGForm(box,obj)
+        return new JGForm(box,obj,cols)
     }
 
 
@@ -112,11 +140,13 @@ JGForm.prototype = {
     },
     asynLoad: function () {
         var arg = arguments;//[0] asynLoadConfig [1] path [2]callback
+       
         var that = this;
         if (Object.prototype.toString.call(arg[0]).slice(8, -1) === "Array") {
             var loadConfig = arg[0]; var path = arg[1];
             if (loadConfig.length > 0) {
                 var currentObj = loadConfig.shift();
+                console.log(currentObj);
                 switch (currentObj['type']) {
                     case 'style':
                         $('[name=' + currentObj['name'] + ']').length === 0
@@ -170,6 +200,7 @@ JGForm.prototype = {
                 }
             }
             that.cacheObj = obj;
+            
             that.asynLoad(that.asynLoadConfig, that.getPath(), that.renderForm(box, obj))
         };
         
@@ -177,7 +208,7 @@ JGForm.prototype = {
     },
 
     renderForm: function (box, obj) {
-        var that = this, box = box, obj = obj, inpList = '', btnList = '', retVal = " ";
+        var that = this, box = box, obj = obj, cols =that.cols, inpList = '', btnList = '', retVal = " ";
        
         for (var i = 0; len = obj.length, i < len; i++) {
 
@@ -213,7 +244,9 @@ JGForm.prototype = {
                             case 'ATTACHMENT':
                                 return "<span class='addBox'  " + retVal + " ><span class='addLeft'>+</span><span class='addRight'><span class='addFile'>File</span><span class='addLink'>Link</span></span></span>";
                                 break;
-                           
+                            case 'EDITOR':
+                                return "<div class='JGFormEditor_" + a['category'] +" editorBox' id=" + b.id + "_" + ind + " ></div>";
+                                break;
                             default:
                                
                                 break;
@@ -224,10 +257,21 @@ JGForm.prototype = {
                     ]
                 );
             }
+            //元素渲染后触发的事件
+            !!obj[i]['completed'] &&
+                (function (a,b) {
+                setTimeout(function () {
+                    console.log(b);
+                    !!a['completed'](b)
+                }, 0);
+
+            })(obj[i], that.id+"_"+ i)
+              
 
         }
-        $(box).append("<div class='JGFormBox'><form enctype='multipart/form-data' method='post' name='qaz'>" + inpList + "</form><div class='JGFormBtn'>" + btnList + "</div></div>")
-        that.eventBind(box,obj);
+        $(box).append("<div class='JGFormBox'><form enctype='multipart/form-data' method='post' name='JGForm'>" + inpList + "</form><div class='JGFormBtn'>" + btnList + "</div></div>");
+        $(box + ' .JGFormBox .JGFormRow').css('width', (0 | (99 / (0 | cols))) + '%');
+        that.eventBind(box, obj);
     },
     returnIndex: function ($elem) {
         return +(('' + $elem.attr('id')).split('_').slice(-1)[0]);
@@ -235,10 +279,11 @@ JGForm.prototype = {
     , eventBind: function (box, obj) {
         var that = this;
         var obj = obj, box = box;
-        $(box).delegate('.JGFormBox [class*=JGFormRow_]', 'click focus input propertychange change', function (e) {
-           
+        $(box).delegate('.JGFormBox [class*=JGFormRow_]', 'click focus input propertychange change resize', function (e) {
+            
             var ind = that.returnIndex($(this));
-            if (!!obj[ind][e.type] ){
+            if (!!obj[ind][e.type]) {
+                console.log(e.type);
                 obj[ind][e.type]($(this));
                 e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
             }
@@ -364,8 +409,12 @@ JGForm.prototype = {
 
         $('body').append('<div  class=\'JGFormSelectBox\' ><ul from="' + $elem.attr('id') + '" selectType="' + obj[ind]['selectType'] + '"></ul><div  class=\'JGFormSelectBtn\'><a  class=\'JGFormSelectBtnClr\' >Clear</a><a  class=\'JGFormSelectBtnCls\' >Close</a></div></div>')
        
-        $('.JGFormSelectBox').css("left", $elem.offset().left);
-        $('.JGFormSelectBox').css("top", $elem.offset().top + $elem.outerHeight());
+        $('.JGFormSelectBox').css({
+            "left": $elem.offset().left-1,
+            "top": $elem.offset().top + $elem.outerHeight(),
+            "width" :$elem.outerWidth()
+        });
+      
         var dataSource = obj[ind]['data-Source'],
             len = 0;
         switch (that.typeOf(dataSource)) {

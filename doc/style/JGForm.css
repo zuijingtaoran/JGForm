@@ -1,44 +1,58 @@
-﻿.JGFormBox {position:relative;
-            width:98%; 
-            height:auto;         
-            padding:10px;
-            font-size:13px;
-            border:2px solid #eee;
-            border-radius:4px;
+﻿.JGFormBox {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    font-size: 13px;
+    border: 2px solid #eee;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
+    .JGFormBox form::after { width:0px; height:0px; clear:both; content:''; display:block;
+    }
     .JGFormBox * {
         box-sizing: border-box;
         margin: 0px;
-        padding:0px; position:relative; font-family:Arial;
+        padding: 0px;
+        position: relative;
+        font-family: Arial;
     }
     .JGFormBox .JGFormRow {
         width: 99%;
       
         height: auto;
         padding: 3px;
-        margin: 9px;
+        margin: 0px 0px 9px 0px;
+        float:left;
     }
 
 
  .JGFormBox .JGFormRow label {
-    font-size: 1.3em;
-    width: 200px;
-  
+    font-size: 1.1em;
+    width: 120px;
+  height:28px;
+  line-height:28px;
     display: inline-block;
    
     float: left;
     text-align: right;
 }
-        .JGFormBox .JGFormRow div {
-            font-size: 1.1em;
+        .JGFormBox .JGFormRow>div {
+            font-size: 1.04em;
             width: auto;
           
             border: 1px solid #ddd;
             height: 30px;
             text-align: left;
-            margin-left: 220px;
+            margin-left: 140px;
+            height:auto;
           
         }
+            .JGFormBox .JGFormRow .editorBox {
+                width:100%;
+                 min-height:200px;
+                 height:auto;
+            }
             /*.JGFormBox .JGFormRow div::before {
                 position: absolute;
                 height: 10px;
@@ -54,7 +68,6 @@
                
             }*/
             .JGFormBox .JGFormRow div::after {
-             
             }
             .JGFormBox .JGFormRow div[type=text]::after {
                 position: absolute;
@@ -68,7 +81,8 @@
                 text-align: center;
                 border-bottom-left-radius: 4px;
                 padding-left: 6px;
-                padding-right: 2px; content: attr(type) ' max:'attr(maxlength);
+                padding-right: 2px;
+                content: 'max:' attr(maxlength) 'bytes';
                 color: #0094ff;
             }
             .JGFormBox .JGFormRow div[type=number]::after {
@@ -327,7 +341,7 @@
                 padding: 4px;
             }
     .JGFormBox .JGFormBtn input[type=button] {
-        width: 130px;
+        width: 70px;
         height: 30px;
         border: none;
         border-radius: 3px;
@@ -344,6 +358,7 @@
     position: absolute;
     background-color: #fbfbfb;
     min-width:130px;
+    z-index:19890624;
 }
 
     .JGFormSelectBox ul {
@@ -353,8 +368,7 @@
         margin:2px;
     }
         .JGFormSelectBox ul[selectType=radio] {
-            list-style-type:circle;
-            
+            list-style-type: disc;
         }
         .JGFormSelectBox ul[selectType=checkbox] {
         
@@ -386,5 +400,8 @@
             }
 
 
-#jmonth { z-index:100;
+#jmonth { z-index:19890624;
+}
+.JGFormBox .w-e-text-container .w-e-panel-container .w-e-panel-close {
+    z-index: 19890000;
 }
