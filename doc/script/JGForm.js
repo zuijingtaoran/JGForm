@@ -189,7 +189,7 @@ JGForm.prototype = {
         }
 
     },
-    init: function (box,obj) {
+    init: function (box, obj) {
         var that = this, box = box, obj = obj;
         if (typeof obj === "object") {
             for (var i = 0; len = obj.length, i < len;i++) {
@@ -219,7 +219,7 @@ JGForm.prototype = {
                     Object.prototype.toString.call(a[alist]).slice(8, -1) !== 'Function' &&
                         (retVal += alist + "='" + a[alist] + "'");                   
                 }
-                btnList += "<input class='JGFormBtn_" + a['category'] + "' id=" + that.id + "_" + i + "' " + retVal + " />"
+                btnList += "<input class='JGFormBtn_" + a['category'] + "' id=" + that.id + "_" + i + " " + retVal + "  />"
             } else {
                 inpList += that.format("<div class='JGFormRow' ><label>{0}</label><div type='{2}' maxlength='{3}'>{1}</div></div>",
                   
@@ -229,7 +229,9 @@ JGForm.prototype = {
                         for (alist in a) {
                             Object.prototype.toString.call(a[alist]).slice(8, -1) !== 'Function' &&
                                 (retVal += alist + "='" + a[alist] + "' ");
+                           
                         }
+                        console.log(retVal);
                         switch (a['category']) {
                             case 'INPUT':
                               
@@ -238,7 +240,7 @@ JGForm.prototype = {
                                 break;
                             case 'SELECT':
                                 
-                                    return "<input  class='JGFormRow_" + a['category'] +"'  id=" + b.id + "_" + ind + " name='" + a['desc'] + "' " + retVal + " />"
+                                    return "<input  class='JGFormRow_" + a['category'] +"'  id=" + b.id + "_" + ind + " " + retVal + " />"
                                
                                 break;
                             case 'ATTACHMENT':
@@ -269,21 +271,22 @@ JGForm.prototype = {
               
 
         }
-        $(box).append("<div class='JGFormBox'><form enctype='multipart/form-data' method='post' name='JGForm'>" + inpList + "</form><div class='JGFormBtn'>" + btnList + "</div></div>");
+        $(box).append("<div class='JGFormBox'><form enctype='multipart/form-data' method='post' name='" + that.id + "'>" + inpList + "</form><div class='JGFormBtn'>" + btnList + "</div></div>");
         $(box + ' .JGFormBox .JGFormRow').css('width', (0 | (99 / (0 | cols))) + '%');
         that.eventBind(box, obj);
     },
     returnIndex: function ($elem) {
+      
         return +(('' + $elem.attr('id')).split('_').slice(-1)[0]);
     }
     , eventBind: function (box, obj) {
         var that = this;
         var obj = obj, box = box;
-        $(box).delegate('.JGFormBox [class*=JGFormRow_]', 'click focus input propertychange change resize', function (e) {
-            
+        $(box).delegate('.JGFormBox [class*=JGFormRow_]', 'click focus input propertychange change', function (e) {
+
             var ind = that.returnIndex($(this));
             if (!!obj[ind][e.type]) {
-                console.log(e.type);
+
                 obj[ind][e.type]($(this));
                 e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
             }
@@ -291,6 +294,26 @@ JGForm.prototype = {
                 console.log(JSON.stringify(obj[ind]) + '\r\n' + e.type);
             }
         });
+        $(box).delegate('.JGFormBox [class*=JGFormRow_]', 'input propertychange change', function (e) {
+            //监听输入框录入事件
+            //JGFormSelectBox
+
+            that.debounce(that.lazyChange, window, [$(this), obj, e]);
+           
+           
+        });
+        $(box).delegate('.JGFormBox [class*=JGFormBtn_]', 'click', function (e) {
+        
+            var ind = that.returnIndex($(this));
+            if (!!obj[ind][e.type]) {
+
+                obj[ind][e.type]($(this));
+                e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
+            }
+            else {
+                console.log(JSON.stringify(obj[ind]) + '\r\n' + e.type);
+            }
+        })
         $(box).delegate('.JGFormRow div', 'click', function (e) {
             //监听从select传入父级的点击事件,若用户未指定事件，则执行下面的默认事件。
            
@@ -391,23 +414,57 @@ JGForm.prototype = {
         //点击空白处隐藏。
         $(document).mouseup(function (event) {
             var $con = $('.JGFormSelectBox');   // 设置目标区域
-            if (!$con.is(event.target) && $con.has(event.target).length === 0) { 
-
-                $('.JGFormSelectBox').remove();  
+            if (!$con.is(event.target) && $con.has(event.target).length === 0) {//若不是待选区
+                   $('.JGFormSelectBox').remove();
+              
             }
-        });
-   
-
-        
+        });       
        
 
     },
-    builderDrop: function ($elem, obj) {
-        $(".JGFormSelectBox").remove();
-        var that = this, $elem = $elem, obj = obj, ind = that.returnIndex($elem);
-      
+    debounce: function (method, context, arg) {
+        clearTimeout(method.timeout);
+                 method.timeout = setTimeout(function () {
+                     method.apply(context, arg);
+                 }, 500);
+    },
+    lazyChange: function () {
+        var that = JGForm.call({});
+            var arg = arguments,
+            $inp = arg[0],
+            $dropdown =$("[from=" + $inp.attr('id')+"]"),
+            inpVAL = ('' + $inp.val()).split(',').slice(-1)[0],
+            ind = that.returnIndex($inp),
+        obj = arg[1],
+            e= arg[2]
+            ;
+        if (!!obj[ind][e.type]) {
 
-        $('body').append('<div  class=\'JGFormSelectBox\' ><ul from="' + $elem.attr('id') + '" selectType="' + obj[ind]['selectType'] + '"></ul><div  class=\'JGFormSelectBtn\'><a  class=\'JGFormSelectBtnClr\' >Clear</a><a  class=\'JGFormSelectBtnCls\' >Close</a></div></div>')
+            obj[ind][e.type]($inp);
+            e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
+        }
+        else {
+            //执行默认输入联想事件
+            $dropdown.find('li').each(function (i, val) {
+                console.log($(val).text());
+                that.contain($(val).text(), inpVAL) ?
+                    $(val).removeClass('JGFormHide') :
+                    $(val).addClass('JGFormHide');
+            })
+        }
+       
+
+
+
+
+    },
+    builderDrop: function ($elem, obj) {
+       
+       
+        var that = this, $elem = $elem, obj = obj, ind = that.returnIndex($elem);
+        if ($(".JGFormSelectBox").attr("from") == $elem.attr("id")) { return; }//若目标输入框已唤出待选区则不执行
+        $(".JGFormSelectBox").remove();
+        $('body').append('<div  class=\'JGFormSelectBox\' ><div  class=\'JGFormSelectUl\' ><ul from="' + $elem.attr('id') + '" selectType="' + obj[ind]['selectType'] + '"></ul></div><div  class=\'JGFormSelectBtn\'><a  class=\'JGFormSelectBtnClr\' >Clear</a><a  class=\'JGFormSelectBtnCls\' >Close</a></div></div>')
        
         $('.JGFormSelectBox').css({
             "left": $elem.offset().left-1,
@@ -419,9 +476,15 @@ JGForm.prototype = {
             len = 0;
         switch (that.typeOf(dataSource)) {
             case "String":
-                $.getJSON(dataSource, function (data) {
-                    $('.JGFormSelectBox ul').append(that.builderLI(data));
-                   
+                
+                $.ajax(dataSource, {
+                    type: 'get',
+                    dataType: 'json',
+                    cache: true,
+                  
+                    success: function (data) {
+                        $('.JGFormSelectBox ul').append(that.builderLI(data));
+                    }
                 })
                 break;
             case "Array":
@@ -444,7 +507,9 @@ JGForm.prototype = {
             } else {
                 liList += "<li value='" + data[i] + "'>" + data[i] + "</li>"
             }
+           
         }
+
         //队列末尾加入selectBox 子元素的事件监听
         setTimeout(function () {
             $('.JGFormSelectBox ul li').click(function () {
@@ -456,7 +521,21 @@ JGForm.prototype = {
                         $('.JGFormSelectBox .JGFormSelectBtnCls').trigger('click');//
                         break;
                     case 'checkbox':
-                        $drop.val($drop.val()+$that.attr('value')+",");
+                        var a = ('' + $drop.val()).split(','), b = $that.attr('value');
+                        a[a.length - 1] = null;
+                        b = '' + a + b + ",";
+                        $drop.val(b);
+                        var inp = $drop[0];
+                        inp.focus();//解决ff不获取焦点无法定位问题
+                        if (window.getSelection) {//ie11 10 9 ff safari
+                            var max_Len = inp.value.length;//text字符数
+                            inp.setSelectionRange(max_Len, max_Len);
+                        }
+                        else if (document.selection) {//ie10 9 8 7 6 5
+                            var range = inp.createTextRange();//创建range
+                            range.collapse(false);//光标移至最后
+                            range.select();//避免产生空格
+                        }
                         break;
                     default:
                         break;
@@ -490,12 +569,13 @@ JGForm.prototype = {
     }
     ,
     contain: function () {
-        switch (this.typeOf(arguments[0])) {
-            case String:
-                return (arguments[0].indexOf(arguments[1]) > -1);
+        switch (Object.prototype.toString.call(arguments[0] || '').slice(8, -1)) {
+            case 'String':
+
+                return (arguments[0].toLowerCase().indexOf(arguments[1].toLowerCase()) > -1);
                 break;
-            case Array:
-                return ((''+arguments[0]).indexOf(','+arguments[1]+',') > -1)
+            case 'Array':
+                return (('' + arguments[0]).toLowerCase().indexOf(',' + arguments[1].toLowerCase() + ',') > -1)
                 break;
             default:
                 return !1;

@@ -37,7 +37,7 @@
     float: left;
     text-align: right;
 }
-        .JGFormBox .JGFormRow>div {
+        .JGFormBox .JGFormRow div {
             font-size: 1.04em;
             width: auto;
           
@@ -45,14 +45,8 @@
             height: 30px;
             text-align: left;
             margin-left: 140px;
-            height:auto;
           
         }
-            .JGFormBox .JGFormRow .editorBox {
-                width:100%;
-                 min-height:200px;
-                 height:auto;
-            }
             /*.JGFormBox .JGFormRow div::before {
                 position: absolute;
                 height: 10px;
@@ -68,6 +62,7 @@
                
             }*/
             .JGFormBox .JGFormRow div::after {
+             
             }
             .JGFormBox .JGFormRow div[type=text]::after {
                 position: absolute;
@@ -182,9 +177,13 @@
                 width: 100%;
                 height: 28px;
                 border: none;
+                z-index:2;
             }
+                .JGFormBox .JGFormRow div input:empty{
+                    z-index:1;
+                }
                 .JGFormBox .JGFormRow div input[readonly] {
-                    background-color:#f5f5f5;
+                    background-color: #f5f5f5;
                 }
                 
                 /**attach*/
@@ -353,20 +352,29 @@
         }
 
 .JGFormSelectBox {
-    height: auto;
+  max-height:267px;
+  z-index:3;
     border: 1px solid #bbb;
     position: absolute;
     background-color: #fbfbfb;
     min-width:130px;
-    z-index:19890624;
+  
+    overflow:hidden;
 }
-
-    .JGFormSelectBox ul {
-        list-style-type: none;
-        list-style-position:inside;
-        padding:3px;
-        margin:2px;
+    .JGFormSelectBox .JGFormSelectUl {
+        position: relative;
+        max-height:240px;
+        overflow-y:auto;
+        padding-bottom:5px;
     }
+.JGFormSelectBox ul {
+   
+    list-style-type: none;
+    list-style-position: inside;
+    padding: 1px;
+    margin: 2px;
+    height: auto;
+}
         .JGFormSelectBox ul[selectType=radio] {
             list-style-type: disc;
         }
@@ -388,11 +396,17 @@
             }
     .JGFormSelectBox .JGFormSelectBtn {
         text-align: right;
-        padding: 3px;
-        border-top: 2px dotted #bbb;
+        padding: 0px 20px 0px 0px;
+        border-top: 1px dotted #bbb;
+        position:absolute;
+        bottom:0px; left:0px;
+        width:100%;
+
+        background-color:#efefef;
+        height:20px;
     }
 
-        .JGFormSelectBox .JGFormSelectBtn a { margin-left:3px; font-size:0.9em; display:inline-block; padding:2px;
+        .JGFormSelectBox .JGFormSelectBtn a { margin-right:3px; font-size:0.9em; display:inline-block; padding:2px;
                                               color:#4394d6;
         }
             .JGFormSelectBox .JGFormSelectBtn a:hover { background-color:#4394d6; color:#fff;
@@ -400,8 +414,9 @@
             }
 
 
-#jmonth { z-index:19890624;
+.JGFormHide { display:none;
 }
-.JGFormBox .w-e-text-container .w-e-panel-container .w-e-panel-close {
-    z-index: 19890000;
+
+#jmonth {
+    z-index: 100;
 }

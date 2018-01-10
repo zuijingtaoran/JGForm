@@ -9290,7 +9290,7 @@ jQuery.extend({
                 } else {
 
                     //jg change here===
-                 //   console.log('jg'+response.data + new Date());
+                    console.log('jg'+response.data + new Date());
                     //end===
 					statusText = response.state;
 					success = response.data;
