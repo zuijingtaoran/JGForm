@@ -276,8 +276,10 @@ JGForm.prototype = {
         that.eventBind(box, obj);
     },
     returnIndex: function ($elem) {
-      
-        return +(('' + $elem.attr('id')).split('_').slice(-1)[0]);
+        if (!this.contain('' + $elem.attr('id'), 'JGForm')){
+            return 0;//若是单纯借用JGForm的方法，不引入此框架，则返回0
+        }
+        return +(('' + $elem.attr('id')).split('_').slice(-1)[0])||0;
     }
     , eventBind: function (box, obj) {
         var that = this;
@@ -464,7 +466,7 @@ JGForm.prototype = {
         var that = this, $elem = $elem, obj = obj, ind = that.returnIndex($elem);
         if ($(".JGFormSelectBox").attr("from") == $elem.attr("id")) { return; }//若目标输入框已唤出待选区则不执行
         $(".JGFormSelectBox").remove();
-        $('body').append('<div  class=\'JGFormSelectBox\' ><div  class=\'JGFormSelectUl\' ><ul from="' + $elem.attr('id') + '" selectType="' + obj[ind]['selectType'] + '"></ul></div><div  class=\'JGFormSelectBtn\'><a  class=\'JGFormSelectBtnClr\' >Clear</a><a  class=\'JGFormSelectBtnCls\' >Close</a></div></div>')
+        $('body').append('<div  class=\'JGFormSelectBox\' ><div  class=\'JGFormSelectUl\' ><ul from="' + $elem.attr('id') + '" selectType="' + obj[ind]['selectType'] + '"><img src=http://www.qg101.com/SVG-Loaders/svg-loaders/three-dots.svg alt=\'Loading\'/></ul></div><div  class=\'JGFormSelectBtn\'><a  class=\'JGFormSelectBtnClr\' >Clear</a><a  class=\'JGFormSelectBtnCls\' >Close</a></div></div>')
        
         $('.JGFormSelectBox').css({
             "left": $elem.offset().left-1,
@@ -483,12 +485,12 @@ JGForm.prototype = {
                     cache: true,
                   
                     success: function (data) {
-                        $('.JGFormSelectBox ul').append(that.builderLI(data));
+                        $('.JGFormSelectBox ul').html(that.builderLI(data));
                     }
                 })
                 break;
             case "Array":
-                $('.JGFormSelectBox ul').append(that.builderLI(dataSource));
+                $('.JGFormSelectBox ul').html(that.builderLI(dataSource));
                
                 break;
 
