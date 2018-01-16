@@ -1,4 +1,4 @@
-﻿var JGForm = function (box,obj,cols) {
+var JGForm = function (box,obj,cols) {
      /*
         depend:jquery-1.11.3.js  
         arguments&typeof:
@@ -271,7 +271,7 @@ JGForm.prototype = {
               
 
         }
-        $(box).append("<div class='JGFormBox'><form enctype='multipart/form-data' method='post' name='" + that.id + "'>" + inpList + "</form><div class='JGFormBtn'>" + btnList + "</div></div>");
+        $(box).html("<div class='JGFormBox'><form enctype='multipart/form-data' method='post' name='" + that.id + "'>" + inpList + "</form><div class='JGFormBtn'>" + btnList + "</div></div>");
         $(box + ' .JGFormBox .JGFormRow').css('width', (0 | (99 / (0 | cols))) + '%');
         that.eventBind(box, obj);
     },
@@ -283,145 +283,139 @@ JGForm.prototype = {
     }
     , eventBind: function (box, obj) {
         var that = this;
-        var obj = obj, box = box;
-        $(box).delegate('.JGFormBox [class*=JGFormRow_]', 'click focus input propertychange change', function (e) {
+        var obj = obj, box = '[name=' + that.id + ']';
+        $(box).click(function () { alert(box) });
+        (function (that, obj, box) {
+            $(box).delegate('[class*=JGFormRow_]', 'click focus input propertychange change', function (e) {
 
-            var ind = that.returnIndex($(this));
-            if (!!obj[ind][e.type]) {
+                var ind = that.returnIndex($(this));
+                if (!!obj[ind][e.type]) {
 
-                obj[ind][e.type]($(this));
-                e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
-            }
-            else {
-                console.log(JSON.stringify(obj[ind]) + '\r\n' + e.type);
-            }
-        });
-        $(box).delegate('.JGFormBox [class*=JGFormRow_]', 'input propertychange change', function (e) {
-            //监听输入框录入事件
-            //JGFormSelectBox
-
-            that.debounce(that.lazyChange, window, [$(this), obj, e]);
-           
-           
-        });
-        $(box).delegate('.JGFormBox [class*=JGFormBtn_]', 'click', function (e) {
-        
-            var ind = that.returnIndex($(this));
-            if (!!obj[ind][e.type]) {
-
-                obj[ind][e.type]($(this));
-                e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
-            }
-            else {
-                console.log(JSON.stringify(obj[ind]) + '\r\n' + e.type);
-            }
-        })
-        $(box).delegate('.JGFormRow div', 'click', function (e) {
-            //监听从select传入父级的点击事件,若用户未指定事件，则执行下面的默认事件。
-           
-            var $elem = $(e.target);
-            switch ($elem.attr('selectType')) {
-                case 'date':
-                    laydate();
-                    break;
-                case 'month':
-                    jmonth();
-                    break;
-                case 'radio':
-                    that.builderDrop($elem, obj);
-                    
-                    break;
-                case 'checkbox':
-                    that.builderDrop($elem, obj);
-                    break;
-                default:
-                    break;
-            }
-            e.stopPropagation();
-        })
-        //attach uoload
-        $('.JGFormRow div[type=attachment] .addBox .addRight [class*=add]').click(function () {
-            var $elem = $(this), $parent = $elem.parents('.addBox');
-            var maxlength = +$(this).parents('div[type=attachment]').find('.addBox').attr('maxlength');
-            if ($parent.parents('div[type=attachment]').find('.fileBox').length >= maxlength) {
-                alert('Max attachment number:' + maxlength); return;
-            }
-            if ($elem.attr('class') === 'addFile') {
-                $parent.before(that.addFile);
-                $parent.parents('div[type=attachment]').find('a[addFile] input').last().trigger('click');
-            }
-            else if ($elem.attr('class') === 'addLink') {
-                $parent.before(that.addLink);
-                $parent.parents('div[type=attachment]').find('a[addLink] input').last()[0].focus();
-            }
-
-        })
-        //inspect file 
-        $(box).delegate('a[addFile] input', 'propertychange change', function () {
-            if (event.type != "propertychange" || event.originalEvent.propertyName == "value") {
-                var $addBox = $(this).parents('div[type=attachment]').find('.addBox');
-            
-                var fn = $(this).val();
-                if (fn === "") { return; }
-                var fileSize = $(this)[0].files[0].size / 1024 / 1024;
-                if (fileSize > +$addBox.attr('maxSize')                ) {
-                    alert('Attachment size<' + $addBox.attr('maxSize')+'M'); return;
+                    obj[ind][e.type]($(this));
+                    e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
                 }
-                if ($addBox.attr('fizeType').indexOf(fn.split('.').slice(-1)[0].toLowerCase()) > -1) {
-                    $(this).parent().find('span').text(fn.split('\\').slice(-1)[0])
-                    $(this).parent().addClass('filechoose');
-                } else {
-                    alert('Only ' + $addBox.attr('fizeType'));
-                    $(this).val('');
-                    $(this).parent().find('span').text('Reselect');
+                else {
+                    console.log(JSON.stringify(obj[ind]) + '\r\n' + e.type);
                 }
-            }
-        })
-        $(box).delegate('a[addLink] input', 'blur', function (e) {
-            var $elem = $(this);
-            $elem.parent().attr('title', $elem.val());
-            /(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?/.test($elem.val())
-            ?
-            $.ajax({
-                url: $elem.val(),
-                type: "get",
-                complete: function (response) {
-                    if (response.status == 404) {
-                        $elem.parent().addClass('fileerror').removeClass('filechoose');
+            });
+            $(box).delegate('[class*=JGFormRow_]', 'input propertychange change', function (e) {
+                //监听输入框录入事件
+                //JGFormSelectBox
+
+                that.debounce(that.lazyChange, window, [$(this), obj, e]);
+
+
+            });
+            $(box).parent().delegate('[class*=JGFormBtn_]', 'click', function (e) {
+
+                var ind = that.returnIndex($(this));
+                if (!!obj[ind][e.type]) {
+
+                    obj[ind][e.type]($(this));
+                    e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
+                }
+                else {
+                    console.log(JSON.stringify(obj[ind]) + '\r\n' + e.type);
+                }
+            })
+            $(box).delegate('.JGFormRow div', 'click', function (e) {
+                //监听从select传入父级的点击事件,若用户未指定事件，则执行下面的默认事件。
+
+                var $elem = $(e.target);
+                switch ($elem.attr('selectType')) {
+                    case 'date':
+                        laydate();
+                        break;
+                    case 'month':
+                        jmonth();
+                        break;
+                    case 'radio':
+                        that.builderDrop($elem, obj);
+
+                        break;
+                    case 'checkbox':
+                        that.builderDrop($elem, obj);
+                        break;
+                    default:
+                        break;
+                }
+                e.stopPropagation();
+            })
+            //attach uoload
+            $('.JGFormRow div[type=attachment] .addBox .addRight [class*=add]').click(function () {
+                var $elem = $(this), $parent = $elem.parents('.addBox');
+                var maxlength = +$(this).parents('div[type=attachment]').find('.addBox').attr('maxlength');
+                if ($parent.parents('div[type=attachment]').find('.fileBox').length >= maxlength) {
+                    alert('Max attachment number:' + maxlength); return;
+                }
+                if ($elem.attr('class') === 'addFile') {
+                    $parent.before(that.addFile);
+                    $parent.parents('div[type=attachment]').find('a[addFile] input').last().trigger('click');
+                }
+                else if ($elem.attr('class') === 'addLink') {
+                    $parent.before(that.addLink);
+                    $parent.parents('div[type=attachment]').find('a[addLink] input').last()[0].focus();
+                }
+
+            })
+            //inspect file 
+            $(box).delegate('a[addFile] input', 'propertychange change', function () {
+                if (event.type != "propertychange" || event.originalEvent.propertyName == "value") {
+                    var $addBox = $(this).parents('div[type=attachment]').find('.addBox');
+
+                    var fn = $(this).val();
+                    if (fn === "") { return; }
+                    var fileSize = $(this)[0].files[0].size / 1024 / 1024;
+                    if (fileSize > +$addBox.attr('maxSize')) {
+                        alert('Attachment size<' + $addBox.attr('maxSize') + 'M'); return;
+                    }
+                    if ($addBox.attr('fizeType').indexOf(fn.split('.').slice(-1)[0].toLowerCase()) > -1) {
+                        $(this).parent().find('span').text(fn.split('\\').slice(-1)[0])
+                        $(this).parent().addClass('filechoose');
                     } else {
-                        $elem.parent().addClass('filechoose').removeClass('fileerror');
+                        alert('Only ' + $addBox.attr('fizeType'));
+                        $(this).val('');
+                        $(this).parent().find('span').text('Reselect');
                     }
                 }
-            
-                }) : $elem.parent().addClass('fileerror').removeClass('filechoose');
+            })
+            $(box).delegate('a[addLink] input', 'blur', function (e) {
+                var $elem = $(this);
+                $elem.parent().attr('title', $elem.val());
+                /(ht|f)tp(s?)\:\/\/[0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*(:(0-9)*)*(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&amp;%\$#_]*)?/.test($elem.val())
+                    ?
+                    $.ajax({
+                        url: $elem.val(),
+                        type: "get",
+                        complete: function (response) {
+                            if (response.status == 404) {
+                                $elem.parent().addClass('fileerror').removeClass('filechoose');
+                            } else {
+                                $elem.parent().addClass('filechoose').removeClass('fileerror');
+                            }
+                        }
+
+                    }) : $elem.parent().addClass('fileerror').removeClass('filechoose');
 
 
-            e.stopPropagation();
-        })
-        $(box).delegate('.fileBox i', 'click', function () {
-            $(this).parents('.fileBox').remove();
-        })
+                e.stopPropagation();
+            })
+            $(box).delegate('.fileBox i', 'click', function () {
+                $(this).parents('.fileBox').remove();
+            })
 
-        //$(box).delegate('.JGFormBox [class*=JGFormBtn input]', 'click', function (e) {
-        //    var ind = that.returnIndex($(this));
-        //    if (!!obj[ind][e.type]) {
-        //        obj[ind][e.type]($(this));
-        //        e.stopPropagation();//若用户指定了事件，则阻止冒泡 <<关键代码>>
-        //    }
-        //    else {
-        //        console.log(JSON.stringify(obj[ind]) + '\r\n' + e.type);
-        //    }
-        //});
 
-        //点击空白处隐藏。
-        $(document).mouseup(function (event) {
-            var $con = $('.JGFormSelectBox');   // 设置目标区域
-            if (!$con.is(event.target) && $con.has(event.target).length === 0) {//若不是待选区
-                   $('.JGFormSelectBox').remove();
-              
-            }
-        });       
-       
+            //点击空白处隐藏。
+            $(document).mouseup(function (event) {
+                var $con = $('.JGFormSelectBox');   // 设置目标区域
+                if (!$con.is(event.target) && $con.has(event.target).length === 0) {//若不是待选区
+                    $('.JGFormSelectBox').remove();
+
+                }
+            });
+
+        })(that, obj, box)
+        
 
     },
     debounce: function (method, context, arg) {
