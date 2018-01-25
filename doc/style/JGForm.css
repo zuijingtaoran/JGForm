@@ -4,7 +4,7 @@
     height: auto;
     padding: 10px;
     font-size: 13px;
-    border: 2px solid #eee;
+    border:none;
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -64,7 +64,7 @@
             .JGFormBox .JGFormRow div::after {
              
             }
-            .JGFormBox .JGFormRow div[type=text]::after {
+          /*  .JGFormBox .JGFormRow div[type=text]::after {
                 position: absolute;
                 height: 12px;
                 width: auto;
@@ -95,7 +95,7 @@
                 padding-right: 2px;
                 content: attr(type);
                 color: #ff6a00;
-            }
+            }*/
             /*before*/
             .JGFormBox .JGFormRow div[type=text]::before {
                 position: absolute;
@@ -375,14 +375,12 @@
     margin: 2px;
     height: auto;
 }
-    .JGFormSelectBox ul > img {
-        width: 100%;
-        height: 15px;
-        background-color: transparent;
+    .JGFormSelectBox ul > img { width:100%; height:15px; background-color:transparent;
     }
-        .JGFormSelectBox ul[selectType=radio] {
-            list-style-type: disc;
-        }
+    
+    .JGFormSelectBox ul[selectType=radio] {
+        list-style-type: disc;
+    }
         .JGFormSelectBox ul[selectType=checkbox] {
         
             list-style-type: square;
