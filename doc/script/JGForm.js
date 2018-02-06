@@ -234,7 +234,7 @@ JGForm.prototype = {
                 }
                 btnList += "<input class='JGFormBtn_" + a['category'] + "' id=" + that.id + "_" + i + " " + retVal + "  />"
             } else {
-                inpList += that.format("<div class='JGFormRow' ><label>{0}</label><div type='{2}' maxlength='{3}'>{1}</div></div>",
+                inpList += that.format("<div class='JGFormRow' ><label>{0}</label><div type='{2}' maxlength='{3}' minlength='{4}'>{1}</div></div>",
 
                     [obj[i]['desc'],
                     (function (a, b, ind) {
@@ -268,7 +268,8 @@ JGForm.prototype = {
                         }
                     })(obj[i], that, i),
                     obj[i]['type'],
-                    obj[i]['maxlength']
+                    obj[i]['maxlength'],
+                    obj[i]['minlength']
                     ]
                 );
             }
@@ -319,11 +320,13 @@ JGForm.prototype = {
                     console.log(JSON.stringify(obj[ind]) + '\r\n' + e.type);
                 }
             });
-            $(box).delegate('[class*=JGFormRow_]', 'input propertychange change', function (e) {
+            $(box).delegate('[class*=JGFormRow_]', 'input propertychange', function (e) {
                 //监听输入框录入事件
                 //JGFormSelectBox
                 console.log(e);
                 that.debounce(that.lazyChange, window, [$(this), obj, e]);
+                var $par = $(this).parent();
+                $par.attr('class', ('' + $par.attr('class')).replace(/\bJGFormInfo_\w{1,9}\b/g,'')) ;
 
 
             });
@@ -357,6 +360,8 @@ JGForm.prototype = {
                     case 'checkbox':
                         that.builderDrop($elem, obj);
                         break;
+                    
+                  
                     default:
                         break;
                 }
@@ -426,6 +431,15 @@ JGForm.prototype = {
             })
 
 
+            $(window).keydown(function (e) {
+                var theEvent = e || window.event;
+                console.log(theEvent);
+                var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+                if (code == 13) {
+                    $('[KEY=ENTER]').trigger('click');
+                    return false;
+                }
+            })
             
 
         })(that, obj, box)
@@ -453,12 +467,18 @@ JGForm.prototype = {
         }
         else {
             //执行默认输入联想事件
-            $dropdown.find('li').each(function (i, val) {
-                console.log($(val).text());
-                that.contain($(val).text(), inpVAL) ?
-                    $(val).removeClass('JGFormHide') :
-                    $(val).addClass('JGFormHide');
-            })
+            if ((''+$inp.attr('data-Source')).indexOf( 'GET_EMPLOYEES_INFORMATION')>-1) {
+               
+                that.builderDrop($inp, obj);
+
+            } else {
+                $dropdown.find('li').each(function (i, val) {
+                    console.log($(val).text());
+                    that.contain($(val).text(), inpVAL) ?
+                        $(val).removeClass('JGFormHide') :
+                        $(val).addClass('JGFormHide');
+                })
+            }
         }
 
 
@@ -472,7 +492,7 @@ JGForm.prototype = {
         var that = this, $elem = $elem, obj = obj, ind = that.returnIndex($elem);
         if ($(".JGFormSelectBox").attr("from") == $elem.attr("id")) { return; }//若目标输入框已唤出待选区则不执行
         $(".JGFormSelectBox").remove();
-        $('body').append('<div  class=\'JGFormSelectBox\' ><div  class=\'JGFormSelectUl\' ><ul from="' + $elem.attr('id') + '" selectType="' + obj[ind]['selectType'] + '"><img src=http://www.qg101.com/SVG-Loaders/svg-loaders/three-dots.svg alt=\'Loading\'/></ul></div><div  class=\'JGFormSelectBtn\'><a  class=\'JGFormSelectBtnClr\' >Clear</a><a  class=\'JGFormSelectBtnCls\' >Close</a></div></div>')
+        $('body').append('<div  class=\'JGFormSelectBox\' ><div  class=\'JGFormSelectUl\' ><ul from="' + $elem.attr('id') + '" selectType="' + obj[ind]['selectType'] + '"><img src=http://www.qg101.com/SVG-Loaders/svg-loaders/three-dots.svg alt=\'Loading\'/></ul></div><div  class=\'JGFormSelectBtn\'>' + (obj[ind]['selectType'] !== 'checkbox' ? '' : '<lable class=\'JGFormSelectAll\'  for="JGForm_' + that.id + '_SelectAll"><input id="JGForm_' + that.id + '_SelectAll"  type=checkbox />All</lable>')+'<a  class=\'JGFormSelectBtnClr\' >Clear</a><a  class=\'JGFormSelectBtnCls\' >Close</a></div></div>')
 
         $('.JGFormSelectBox').css({
             "left": $elem.offset().left - 1,
@@ -482,9 +502,10 @@ JGForm.prototype = {
 
         var dataSource = obj[ind]['data-Source'],
             len = 0;
+       
         switch (that.typeOf(dataSource)) {
             case "String":
-
+                dataSource = dataSource.replace('&v_text', "&_") + "&v_text=" + ('' + $elem.val()).split(',').slice(-1)[0];
                 $.ajax(dataSource, {
                     type: 'get',
                     dataType: 'json',
@@ -526,23 +547,31 @@ JGForm.prototype = {
                 switch ($parent.attr('selectType')) {
                     case "radio":
                         $drop.val($that.attr('value'));
-                        $('.JGFormSelectBox .JGFormSelectBtnCls').trigger('click');//
+                        setTimeout(function () {
+                            $('.JGFormSelectBox .JGFormSelectBtnCls').trigger('click') }, 0);
+                        
                         break;
                     case 'checkbox':
-                        var a = ('' + $drop.val()).split(','), b = $that.attr('value');
-                        a[a.length - 1] = null;
-                        b = '' + a + b + ",";
-                        $drop.val(b);
-                        var inp = $drop[0];
-                        inp.focus();//解决ff不获取焦点无法定位问题
-                        if (window.getSelection) {//ie11 10 9 ff safari
-                            var max_Len = inp.value.length;//text字符数
-                            inp.setSelectionRange(max_Len, max_Len);
-                        }
-                        else if (document.selection) {//ie10 9 8 7 6 5
-                            var range = inp.createTextRange();//创建range
-                            range.collapse(false);//光标移至最后
-                            range.select();//避免产生空格
+                        if ((''+$that.attr('class')).indexOf('JGFormSelectActive') > -1) {
+                            $that.removeClass('JGFormSelectActive');
+                            $drop.val($drop.val().replace($that.attr('value'), '').replace(',,', ','))
+                        } else {
+                            $that.addClass('JGFormSelectActive');
+                            var a = ('' + $drop.val()).split(','), b = $that.attr('value');
+                            a[a.length - 1] = null;
+                            b = '' + a + b + ",";
+                            $drop.val(b);
+                            var inp = $drop[0];
+                            inp.focus();//解决ff不获取焦点无法定位问题
+                            if (window.getSelection) {//ie11 10 9 ff safari
+                                var max_Len = inp.value.length;//text字符数
+                                inp.setSelectionRange(max_Len, max_Len);
+                            }
+                            else if (document.selection) {//ie10 9 8 7 6 5
+                                var range = inp.createTextRange();//创建range
+                                range.collapse(false);//光标移至最后
+                                range.select();//避免产生空格
+                            }
                         }
                         break;
                     default:
@@ -558,6 +587,20 @@ JGForm.prototype = {
                 var $that = $(this), $parent = $that.parents('.JGFormSelectBox').find('ul[selectType]');
 
                 $('#' + $parent.attr('from')).val("");
+            })
+            $('.JGFormSelectBox .JGFormSelectAll input').click(function () {
+                var $that = $(this), $parent = $that.parents('.JGFormSelectBox').find('ul[selectType]');
+                var arr = [];
+                if ($that.is(':checked')) {
+                    arr.push('ALL');
+                    $parent.children().addClass('JGFormSelectActive');
+                  
+                } else {
+                    $('.JGFormSelectActive').removeClass('JGFormSelectActive');
+                }
+                    $('#' + $parent.attr('from')).val("" + arr);
+               
+              
             })
         }, 0);
         return liList;
@@ -589,6 +632,16 @@ JGForm.prototype = {
                 return !1;
                 break;
         }
+    },
+    verify_empty: function ($list, prop) {
+        var ret = !0;
+        $list.each(function () {
+
+            if (+$(this).attr(prop) > $(this).val().length) { $(this).parent().addClass('JGFormInfo_Error'); ret = !1; }
+        })
+        return ret;
+
+
     }
 
 }

@@ -340,7 +340,8 @@
                 padding: 4px;
             }
     .JGFormBox .JGFormBtn input[type=button] {
-        width: 70px;
+        width:auto;
+        padding-left:5px; padding-right:5px;
         height: 30px;
         border: none;
         border-radius: 3px;
@@ -408,18 +409,52 @@
         background-color:#efefef;
         height:20px;
     }
-
-        .JGFormSelectBox .JGFormSelectBtn a { margin-right:3px; font-size:0.9em; display:inline-block; padding:2px;
-                                              color:#4394d6;
+        .JGFormSelectBox .JGFormSelectBtn .JGFormSelectAll { float:left;
         }
+        .JGFormSelectBox .JGFormSelectBtn .JGFormSelectAll input{ margin:2px 3px;
+        }
+            .JGFormSelectBox .JGFormSelectBtn a {
+                margin-right: 3px;
+                font-size: 0.9em;
+                display: inline-block;
+                padding: 2px;
+                color: #4394d6;
+            }
             .JGFormSelectBox .JGFormSelectBtn a:hover { background-color:#4394d6; color:#fff;
                                                         cursor:pointer;
             }
+.JGFormSelectActive { background-color:#00b88c; color:#fff;
+}
 
-
-.JGFormHide { display:none;
+.JGFormHide {
+    display: none;
 }
 
 #jmonth {
     z-index: 100;
+}
+
+/* 表单校验**/
+.JGFormInfo_Error {
+    border-color:red!important;
+}
+
+.JGFormInfo_Warn {
+    border-color: #ffd800!important;
+}
+[class*=JGFormInfo_]::after {
+    position: absolute;
+    height: 12px;
+    width: auto;
+    bottom: -13px;
+    right: -1px;
+    font-size: 10px;
+    z-index: 1;
+    background-color: #ddd;
+    text-align: center;
+    border-bottom-left-radius: 4px;
+    padding-left: 6px;
+    padding-right: 2px;
+    content: 'min:' attr(minlength) 'bytes;max:' attr(maxlength) 'bytes';
+    color: #0094ff;
 }
