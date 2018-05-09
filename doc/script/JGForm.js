@@ -486,9 +486,9 @@ JGForm.prototype = {
 
 
     },
-    builderDrop: function ($elem, obj) {
+    builderDrop: function ($elem, obj,func) {
 
-
+        var func = func || function () { };
         var that = this, $elem = $elem, obj = obj, ind = that.returnIndex($elem);
         if ($(".JGFormSelectBox").attr("from") == $elem.attr("id")) { return; }//若目标输入框已唤出待选区则不执行
         $(".JGFormSelectBox").remove();
@@ -512,12 +512,12 @@ JGForm.prototype = {
                     cache: true,
 
                     success: function (data) {
-                        $('.JGFormSelectBox ul').html(that.builderLI(data));
+                        $('.JGFormSelectBox ul').html(that.builderLI(data, func));
                     }
                 })
                 break;
             case "Array":
-                $('.JGFormSelectBox ul').html(that.builderLI(dataSource));
+                $('.JGFormSelectBox ul').html(that.builderLI(dataSource,func));
 
                 break;
 
@@ -527,7 +527,7 @@ JGForm.prototype = {
         }
     }
     ,
-    builderLI: function (data) {
+    builderLI: function (data,func) {
         var that = this, data = data, liList = "";
         for (var i = 0; len = data.length, i < len; i++) {
             if (that.typeOf(data[i]) === "Object") {
@@ -562,6 +562,9 @@ JGForm.prototype = {
                             b = '' + a + b + ",";
                             $drop.val(b);
                             var inp = $drop[0];
+                            console.log("cd");
+                            console.log(inp);
+
                             inp.focus();//解决ff不获取焦点无法定位问题
                             if (window.getSelection) {//ie11 10 9 ff safari
                                 var max_Len = inp.value.length;//text字符数
@@ -577,7 +580,7 @@ JGForm.prototype = {
                     default:
                         break;
                 }
-
+                func($drop);//选中后的回调函数
 
             })
             $('.JGFormSelectBox .JGFormSelectBtnCls').click(function () {
@@ -587,21 +590,24 @@ JGForm.prototype = {
                 var $that = $(this), $parent = $that.parents('.JGFormSelectBox').find('ul[selectType]');
 
                 $('#' + $parent.attr('from')).val("");
+                func($('#' + $parent.attr('from')));//选中后的回调函数
             })
             $('.JGFormSelectBox .JGFormSelectAll input').click(function () {
                 var $that = $(this), $parent = $that.parents('.JGFormSelectBox').find('ul[selectType]');
                 var arr = [];
                 if ($that.is(':checked')) {
-                    arr.push('ALL');
+                    arr.push('All');
                     $parent.children().addClass('JGFormSelectActive');
                   
                 } else {
                     $('.JGFormSelectActive').removeClass('JGFormSelectActive');
                 }
-                    $('#' + $parent.attr('from')).val("" + arr);
+                $('#' + $parent.attr('from')).val("" + arr);
+                func($('#' + $parent.attr('from')));//选中后的回调函数
                
-              
+                $(".JGFormSelectBox").remove();
             })
+           
         }, 0);
         return liList;
     }

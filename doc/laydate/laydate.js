@@ -185,6 +185,7 @@
                         e.length > 3 && (c.timeVoid(e[3], 0) && (f.auto = 1), c.timeVoid(e[4], 1) && (f.auto = 1), c.timeVoid(e[5], 2) && (f.auto = 1)),
                         f.auto ? c.creation([e[0], 0 | e[1], 0 | e[2]], 1) : f.value !== c.elem[h.elemv] && (c.elem[h.elemv] = f.value)
                 }
+               
             },
             c.months = [31, null, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
             c.viewDate = function (a, b, d) {
@@ -445,7 +446,8 @@
                             c.on(b, "click",
                                 function (a) {
                                     c.hasClass(this, h[1]) || (c.stopmp(a), c.creation([0 | this.getAttribute("y"), 0 | this.getAttribute("m"), 0 | this.getAttribute("d")]))
-                                })
+                                });
+                            
                         }),
                     h.oclear = b("#laydate_clear"),
                     c.on(h.oclear, "click",
